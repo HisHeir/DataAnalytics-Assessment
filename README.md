@@ -37,7 +37,7 @@ The task was targetted retrieving plans with no deposits in the last 1 year(365 
 2. The date column needed to be manipulated alongside with other date function and this was done using the dateiff and curdate functions.
 3. The CASE expression was required to categories plan type, and this was used to label the plan type appropraitely.
 
- ## Question 3
+ ## Question 4
  ## Tsk 4: For each customer, assuming the profit_per_transaction is 0.1% of the transaction value, calculate: Account tenure (months since signup), Total transactions, Estimated CLV (Assume: CLV =(total_transactions / tenure) * 12 * avg_profit_per_transaction and Order by estimated CLV from highest to lowest
 
 ### Explanation:
