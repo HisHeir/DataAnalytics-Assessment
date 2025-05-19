@@ -5,12 +5,12 @@
 ## Task: Write a query to find customers with at least one funded savings plan AND one funded investment plan, sorted by total deposits.
 
 ### Explanation:
-The task sought to identify users who have both savings and investment plans (defined by plan flags), and sort them by total deposits, to indicate high-value Customers with multiple products. I identified the column needed for the task in each of the tables provided,the user id, and name from user table, the plan either savings or invested flagged with 1 in plans table, and confirmed amount in the savings table. And since the amount was given in kobo, it was necessary to convert it to naira before use. A relationship was established amonng the tables ob the basis of their primary and foreign keys, and the query was grouped by user id and name and filter where saving count and investment plan was more than or equal to 1.
+The task sought to identify users who have both savings and investment plans (defined by plan flags), and sort them by total deposits, to indicate high-value Customers with multiple products. I identified the column needed for the task in each of the tables provided,the user_id, and name from user table, the plan either savings or invested flagged with 1 in plans table, and confirmed amount in the savings table. And since the amount was given in kobo, it was necessary to convert it to naira before use. A relationship was established among the tables on the basis of their primary and foreign keys, and the query was grouped by user id and name and filter where saving count and investment plan was more than or equal to 1.
 
 ## Challenges:
 
 1. Savings and investment plans are stored together in the plan table but flagged differently which required me to use the CASE expressions to count distinct savings and investment plans per user.
-2. Somebackground query written showed that confirmed amount in savings has negative values which seemed a bit unrealistic, hence where clause was used to filter only the positive records.
+2. Some background query written showed that confirmed_amount in savings has negative values which seemed a bit unrealistic, hence where clause was used to filter only the positive records.
 3. The records and fields needed are scattered across the three tables, therefore inner join was required to establish connection among the tables on the basis of their similar columns.
 4. Aggregation and sorting was needed, and it was resolved alongside with the group by syntax and filtered with having.
 
@@ -19,34 +19,33 @@ The task sought to identify users who have both savings and investment plans (de
 ## Task:  Calculate the average number of transactions per customer per month and categorize them
 
 ### Explanation:
-The goal of this task was to categorize users into "High", "Medium", or Low Frequency" based on average monthly transactions. This at first would require a creating the monthly_transaction_per_user temporary table which would further be used to create the average_transaction_per_user which in turn would also generate the frequency category field. To achieve this, Subqueries and CTEs(Common Table Expression) was required. The monthly_transaction_per_user was created having the owner_id, transaction_month extracted from the transaction_date using extract(date function), then the table used as a temporaray table to also create average_transaction_per_user by aggregating a column in the previous table and grouping by onwer_id, then this table was in turn categorize users into freuqncies and aggregate function count was used to return the number of times each category appear.
+The goal of this task was to categorize users into "High", "Medium", or Low Frequency" based on average monthly transactions. This at first would require creating the monthly_transaction_per_user temporary table which would further be used to create the average_transaction_per_user which in turn would also generated the frequency category field. To achieve this, Subqueries and CTEs(Common Table Expression) was required. The monthly_transaction_per_user was created having the owner_id, transaction_month extracted from the transaction_date using extract(date function), then the table used as a temporaray table to also create average_transaction_per_user by aggregating a column in the previous table and grouping by owner_id, then this table was in turn categorizes users into frequencies and aggregate function count was used to return the number of times each category appear.
 
 ### Challenges
-1. There was a need to calculate the average transactions per user per month, but dates are in raw form (no month-year grouping) which wasn't consistent, hence date function was to resilve this in extracting the month out of the transaction_date.
-2. Counting distinct months in the dataset for accuracy was necessary, and the done by grouping by user and month
+1. There was a need to calculate the average transactions per user per month, but dates are in raw form which wasn't consistent, hence date function was to resolve this in extracting the month out of the transaction_date.
+2. Counting distinct months in the dataset for accuracy was necessary, and this was done grouping by user and month.
 3. The condiitonal logic in the query also raised an alarm, and the CASE expression was used for it.
 
 ## Question 3
 ## Task 3:  Find all active accounts (savings or investments) with no transactions in the last 1 year (365 days) 
 
 ### Explanation:
-The task was targetted retrieving plans with no deposits in the last 1 year(365 days), which could be due to abandonment or some other reason. It requries first creating a temporary table which provides information about plan_id, owner_id and the last_transaction_date and all grouped by the owner_id and plan_id, the table was to convey the latest_transaction details which in turn was used to create another temporaray table which estimates rhe diference between the last_transaction_date and current date as inactivity_days and filters out the flag plans where the last inflow(inactivity_days) exceeds 365 days and the last_transaction_date was null.
+The task was targetted to retrieving plans with no deposits in the last 1 year(365 days), which could be due to abandonment or some other reason. It requries first creating a temporary table which provides information about plan_id, owner_id and the last_transaction_date and all grouped by the owner_id and plan_id, the table was to convey the latest_transaction details which in turn was used to create another temporaray table which estimates the diference between the last_transaction_date and current date as inactivity_days and filters out the flag plans where the last inflow(inactivity_days) exceeds 365 days and the last_transaction_date was null.
 
 ### Challenges:
-1. Since plan could be both savings and investing,  a complex filtering technique was done
+1. Since plan could be both savings and investing, a complex filtering technique was done
 2. The date column needed to be manipulated alongside with other date function and this was done using the dateiff and curdate functions.
 3. The CASE expression was required to categories plan type, and this was used to label the plan type appropraitely.
 
  ## Question 4
- ## Tsk 4: For each customer, assuming the profit_per_transaction is 0.1% of the transaction value, calculate: Account tenure (months since signup), Total transactions, Estimated CLV (Assume: CLV =(total_transactions / tenure) * 12 * avg_profit_per_transaction and Order by estimated CLV from highest to lowest
+ ## Task 4: For each customer, assuming the profit_per_transaction is 0.1% of the transaction value, calculate: Account tenure (months since signup), Total transactions, Estimated CLV (Assume: CLV =(total_transactions / tenure) * 12 * avg_profit_per_transaction and Order by estimated CLV from highest to lowest
 
 ### Explanation:
-This last and more complex task aimed at providing a basic financial value estimate of each customer using tenure and transaction activity. The query used a temporary table titled user_transactions having the customer_id, name, tenure_month generated by extracting the number of months betweeen the date the customer joined and the current date as a major table to create another temporary table that further added the estimated_clv column assuming the profit_per_transaction is 0.1% of the transaction value. And the outer query returns the complete table containing the tenure_month, totak_transactions and estimated_clv 
+This last and more complex task aimed at providing a basic financial value estimate of each customer using tenure and transaction activity. The query used a temporary table titled user_transactions having the customer_id, name, tenure_month generated by extracting the number of months betweeen the date the customer joined and the current date as a major table to create another temporary table that further added the estimated_clv column assuming the profit_per_transaction is 0.1% of the transaction value. And the outer query returns the complete table containing the tenure_month, total_transactions and estimated_clv 
 
 
-### Cahllenges
+### Challenges
 1. Customer Lifetime Value (CLV) relies on tenure_month and average_profit_per_transaction, hence there was need for profit as 0.1% of confirmed_amount as specified in the task was used and CLV formula was wrapped in a CASE expression to handle tenure = 0
-2. There was a need to avoid division by zero for users with <1 month tenure, hence the query uses the case expression to resolve that.
-3. Since transactions were given in kobo, so it was scaled correctly.
+2. . Since transactions were given in kobo, so it was scaled correctly.
  
 
