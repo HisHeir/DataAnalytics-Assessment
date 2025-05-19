@@ -12,3 +12,16 @@ The task sought to identify users who have both savings and investment plans (de
 2. Somebackground query written showed that confirmed amount in savings has negative values which seemed a bit unrealistic, hence where clause was used to filter only the positive records.
 3. The records and fields needed are scattered across the three tables, therefore inner join was required to establish connection among the tables on the basis of their similar columns.
 4. Aggregation and sorting was needed, and it was resolved alongside with the group by syntax and filtered with having.
+
+
+## Question 2: Task:  Calculate the average number of transactions per customer per month and categorize them
+
+### Explanation:
+The goal of this task was to categorize users into "High", "Medium", or Low Frequency" based on average monthly transactions. This at first would require a creating the monthly_transaction_per_user temporary table which would further be used to create the average_transaction_per_user which in turn would also generate the frequency category field. To achieve this, Subqueries and CTEs(Common Table Expression) was required. The monthly_transaction_per_user was created having the owner_id, transaction_month extracted from the transaction_date using extract(date function), then the table used as a temporaray table to also create average_transaction_per_user by aggregating a column in the previous table and grouping by onwer_id, then this table was in turn categorize users into freuqncies and aggregate function count was used to return the number of times each category appear.
+
+### Challenges
+1. There was a need to calculate the average transactions per user per month, but dates are in raw form (no month-year grouping) which wasn't consistent, hence date function was to resilve this in extracting the month out of the transaction_date.
+2. Counting distinct months in the dataset for accuracy was necessary, and the done by grouping by user and month
+3. The condiitonal logic in the query also raised an alarm, and the CASE expression was used for it.
+
+## Question 3
