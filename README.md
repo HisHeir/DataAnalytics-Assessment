@@ -1,7 +1,8 @@
 # DataAnalytics-Assessment
 ## Per-Question Explanations
 
-## Question 1: Task: Write a query to find customers with at least one funded savings plan AND one funded investment plan, sorted by total deposits.
+## Question 1: 
+## Task: Write a query to find customers with at least one funded savings plan AND one funded investment plan, sorted by total deposits.
 
 ### Explanation:
 The task sought to identify users who have both savings and investment plans (defined by plan flags), and sort them by total deposits, to indicate high-value Customers with multiple products. I identified the column needed for the task in each of the tables provided,the user id, and name from user table, the plan either savings or invested flagged with 1 in plans table, and confirmed amount in the savings table. And since the amount was given in kobo, it was necessary to convert it to naira before use. A relationship was established amonng the tables ob the basis of their primary and foreign keys, and the query was grouped by user id and name and filter where saving count and investment plan was more than or equal to 1.
@@ -14,7 +15,8 @@ The task sought to identify users who have both savings and investment plans (de
 4. Aggregation and sorting was needed, and it was resolved alongside with the group by syntax and filtered with having.
 
 
-## Question 2: Task:  Calculate the average number of transactions per customer per month and categorize them
+## Question 2: 
+## Task:  Calculate the average number of transactions per customer per month and categorize them
 
 ### Explanation:
 The goal of this task was to categorize users into "High", "Medium", or Low Frequency" based on average monthly transactions. This at first would require a creating the monthly_transaction_per_user temporary table which would further be used to create the average_transaction_per_user which in turn would also generate the frequency category field. To achieve this, Subqueries and CTEs(Common Table Expression) was required. The monthly_transaction_per_user was created having the owner_id, transaction_month extracted from the transaction_date using extract(date function), then the table used as a temporaray table to also create average_transaction_per_user by aggregating a column in the previous table and grouping by onwer_id, then this table was in turn categorize users into freuqncies and aggregate function count was used to return the number of times each category appear.
@@ -25,3 +27,13 @@ The goal of this task was to categorize users into "High", "Medium", or Low Freq
 3. The condiitonal logic in the query also raised an alarm, and the CASE expression was used for it.
 
 ## Question 3
+## Task 3:  Find all active accounts (savings or investments) with no transactions in the last 1 year (365 days) 
+
+### Explanation:
+The task was targetted retrieving plans with no deposits in the last 1 year(365 days), which could be due to abandonment or some other reason. It requries first creating a temporary table which provides information about plan_id, owner_id and the last_transaction_date and all grouped by the owner_id and plan_id, the table was to convey the latest_transaction details which in turn was used to create another temporaray table which estimates rhe diference between the last_transaction_date and current date as inactivity_days and filters out the flag plans where the last inflow(inactivity_days) exceeds 365 days and the last_transaction_date was null.
+
+### Challenges:
+1. Since plan could be both savings and investing,  a complex filtering technique was done
+2. The date column needed to be manipulated alongside with other date function and this was done using the dateiff and curdate functions.
+3. The CASE expression was required to categories plan type, and this was used to label the plan type appropraitely.
+ 
